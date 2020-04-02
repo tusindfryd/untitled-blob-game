@@ -1,11 +1,15 @@
 #include "World.h"
 
+int World::windowSize_ = 400;
+std::string World::gameName_ = "Untitled Blob Game";
+std::string World::iconPath_ = "icon2.png";
+
 void World::run() {
 
-    sf::RenderWindow window(sf::VideoMode(1200, 660), "Goldfish Simulator", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(windowSize_, windowSize_), gameName_, sf::Style::Titlebar | sf::Style::Close);
 
     sf::Image icon;
-    icon.loadFromFile("icon.png");
+    icon.loadFromFile(iconPath_);
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     sf::Sprite background;
@@ -17,12 +21,13 @@ void World::run() {
     }
 
     background.setTexture(backgroundTexture);
+    Game::setGame();
     sf::Clock clock;
     if(!Menu::openedMenu_) {
         clock.restart();
     }
     while (window.isOpen()) {
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color(120, 128, 74));
 
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -37,11 +42,11 @@ void World::run() {
         window.draw(background);
 
         if (Menu::openedMenu_){
-            Menu::drawMenu(window);
+            Menu::drawMenu(window, windowSize_, gameName_);
         }
         else if (!Menu::openedMenu_){
             Game::displayTime(clock.restart().asSeconds() / 10, window);
-            Game::drawGame(window);
+            Game::drawGame(window, windowSize_);
         }
         window.display();
     }

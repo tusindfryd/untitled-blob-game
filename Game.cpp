@@ -1,69 +1,71 @@
 #include "Game.h"
 
-std::vector<int> Game::gameData_;
+std::vector<int> Game::gameData_(10, 0);
 float Game::timePoints_;
-sf::Sprite Game::fish;
-sf::Texture Game::fishTexture;
-sf::RectangleShape Game::tank;
-//sf::Texture Game::tankTexture;
+sf::Sprite Game::pet_;
+sf::Texture Game::petTexture_;
+std::string Game::petTexturePath_ = "character.png";
 
-void Game::drawGame(sf::RenderWindow &window) {
-    Button saveGameButton;
-    saveGameButton.setSize(sf::Vector2f(148,50));
-    saveGameButton.setPosition(sf::Vector2f(1055, 0));
-    saveGameButton.click(&saveGame, window);
-    sf::Font saveGameFont;
-    if (!saveGameFont.loadFromFile("bodyfont.ttf"))
+Button Game::saveGameButton_;
+sf::Font Game::bodyGameFont_;
+std::string Game::fontPath_ = "bodyfont.ttf";
+sf::Text Game::saveGameText_;
+
+sf::Text Game::timeText_;
+
+void Game::setGame() {
+    saveGameButton_.setPosition(sf::Vector2f(250, 0));
+    if (!bodyGameFont_.loadFromFile(fontPath_))
     {
         std::cout << "Error: Font not loaded" << std::endl;
     }
-    sf::Text saveGameText;
-    saveGameText.setFont(saveGameFont);
-    saveGameText.setString("Save Game");
-    saveGameText.setCharacterSize(32);
-    saveGameText.setPosition(sf::Vector2f(1054, 0));
-    saveGameText.setFillColor(sf::Color::Black);
-    window.draw(saveGameText);
-    //    if (!tankTexture.loadFromFile("tank.png"))
-    //    {
-    //        std::cout << "Tank texture not loaded" << std::endl;
-    //    }
-    //tank.setTexture(tankTexture);
-    //   tank.setTextureRect(sf::IntRect(100, 30, 1000, 600));
-    tank.setSize(sf::Vector2f(1000,600));
-    tank.setFillColor(sf::Color::Blue);
-    //  tank.setScale(sf::Vector2f(0.9,0.9));
-    tank.setPosition(50, 50);
-    //window.draw(tank);
+    saveGameText_.setFont(bodyGameFont_);
+    saveGameText_.setString("Save Game");
+    saveGameText_.setCharacterSize(31);
+    saveGameText_.setPosition(sf::Vector2f(250, 5));
+    saveGameText_.setFillColor(sf::Color::Black);
 
-    if (!fishTexture.loadFromFile("fish.png"))
+    if (!petTexture_.loadFromFile(petTexturePath_))
     {
-        std::cout << "Fish texture not loaded" << std::endl;
+        std::cout << "Pet texture not loaded" << std::endl;
     }
-    fish.setTexture(fishTexture);
-    fish.setPosition((setCoordinates(fish, window)));
-    window.draw(fish);
+    pet_.setTexture(petTexture_);
+
+    timeText_.setFont(bodyGameFont_);
+    timeText_.setCharacterSize(31);
+    timeText_.setFillColor(sf::Color::Black);
+    timeText_.setPosition(sf::Vector2f(80, 5));
+}
+
+void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
+    saveGameButton_.click(&saveGame, window);
+
+    pet_.setPosition((setCoordinates(pet_, windowSize, window)));
+    pet_.setScale(sf::Vector2f(0.3, 0.3));
+    window.draw(pet_);
+    window.draw(saveGameText_);
+
 }
 
 void Game::setGameData(std::vector<int> &gameData) {
     gameData_ = gameData;
 }
 
-sf::Vector2f Game::setCoordinates(sf::Sprite &fish, sf::RenderWindow &window) {
+sf::Vector2f Game::setCoordinates(sf::Sprite &pet, int &windowSize, sf::RenderWindow &window) {
     int x = sf::Mouse::getPosition(window).x;
-    if (x < 50) {
-        x = 50;
+    if (x < 60) {
+        x = 60;
     }
-    else if (x > 1050 - fish.getGlobalBounds().width) {
-        x = 1050 - fish.getGlobalBounds().width;
+    else if (x > windowSize - pet.getGlobalBounds().width - 60) {
+        x = windowSize - pet.getGlobalBounds().width - 60;
     }
 
     int y = sf::Mouse::getPosition(window).y;
-    if (y < 50) {
-        y = 50;
+    if (y < 60) {
+        y = 60;
     }
-    else if (y > 650 - fish.getGlobalBounds().height) {
-        y = 650 - fish.getGlobalBounds().height;
+    else if (y > windowSize - pet.getGlobalBounds().height - 60) {
+        y = windowSize - pet.getGlobalBounds().height - 60;
     }
 
     return sf::Vector2f(x, y);
@@ -76,19 +78,11 @@ void Game::displayTime(float elapsedTime, sf::RenderWindow &window) {
     else {
         timePoints_ = 0;
     }
+
     gameData_[0] = gameData_[0] + int(timePoints_);
-    sf::Font timeFont;
-    if (!timeFont.loadFromFile("bodyfont.ttf"))
-    {
-        std::cout << "Error: Time font not loaded" << std::endl;
-    }
-    sf::Text timeText;
-    timeText.setFont(timeFont);
-    timeText.setString(std::to_string(gameData_[0]));
-    timeText.setCharacterSize(45);
-    timeText.setFillColor(sf::Color::Black);
-    timeText.setPosition(sf::Vector2f(1115, 50));
-    window.draw(timeText);
+
+    timeText_.setString(std::to_string(gameData_[0]));
+    window.draw(timeText_);
 }
 
 void Game::saveGame() {
@@ -97,8 +91,10 @@ void Game::saveGame() {
     if (!gameData.is_open()) {
         std::cout << "Error: Cannot open the game data file for saving" << std::endl;
     }
-    for (auto &el : gameData_) {
-        gameData << std::to_string(el) << '\n';
+    else {
+        for (unsigned int i = 0; i < gameData_.size(); i++) {
+            gameData << std::to_string(gameData_[i]) << '\n';
+        }
+        gameData.close();
     }
-    gameData.close();
 }

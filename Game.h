@@ -11,19 +11,22 @@
 
 class Game {
 public:
-    static void drawGame(sf::RenderWindow &window);
+    static void setGame();
+    static void drawGame(sf::RenderWindow &window, int &windowSize);
     static void setGameData(std::vector<int> &gameData);
     static void displayTime(float elapsedTime, sf::RenderWindow &window);
     static void saveGame();
-    static float timePoints_;
-    static std::vector<int> gameData_; // not ideal for this to be here
 
 private:
-    static void moveFish(sf::Sprite &fish, sf::RenderWindow &window);
-    static sf::Vector2f setCoordinates(sf::Sprite &fish, sf::RenderWindow &window);
-    static sf::Sprite fish;
-    static sf::Texture fishTexture;
-
-    static sf::RectangleShape tank;
-    //    static sf::Texture tankTexture;
+    static float timePoints_;
+    static sf::Vector2f setCoordinates(sf::Sprite &pet, int &windowSize, sf::RenderWindow &window);
+    static sf::Sprite pet_;
+    static sf::Texture petTexture_;
+    static std::string petTexturePath_;
+    static std::vector<int> gameData_;
+    static Button saveGameButton_;
+    static sf::Font bodyGameFont_;
+    static std::string fontPath_;
+    static sf::Text saveGameText_;
+    static sf::Text timeText_;
 };

@@ -11,6 +11,6 @@ public:
     void click(void (*function)(), sf::RenderWindow &window);
 
 private:
-    int buttonWidth_ = 300;
-    int buttonHeight_ = 120;
+    int buttonWidth_ = 130;
+    int buttonHeight_ = 50;
 };

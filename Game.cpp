@@ -6,6 +6,13 @@ sf::Sprite Game::pet_;
 sf::Texture Game::petTexture_;
 std::string Game::petTexturePath_ = "character.png";
 
+sf::Sprite Game::food_;
+sf::Texture Game::appleTexture_;
+std::string Game::appleTexturePath_ = "apple.png";
+
+Button Game::feedButton_;
+bool Game::feedable_ = false;
+
 Button Game::saveGameButton_;
 sf::Font Game::bodyGameFont_;
 std::string Game::fontPath_ = "bodyfont.ttf";
@@ -31,6 +38,16 @@ void Game::setGame() {
     }
     pet_.setTexture(petTexture_);
 
+    if (!appleTexture_.loadFromFile(appleTexturePath_))
+    {
+        std::cout << "Apple texture not loaded" << std::endl;
+    }
+    food_.setTexture(appleTexture_);
+
+    feedButton_.setPosition(sf::Vector2f(95,360));
+    feedButton_.setFillColor(sf::Color::Green);
+    feedButton_.setSize(sf::Vector2f(30,30));
+
     timeText_.setFont(bodyGameFont_);
     timeText_.setCharacterSize(31);
     timeText_.setFillColor(sf::Color::Black);
@@ -39,10 +56,21 @@ void Game::setGame() {
 
 void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
     saveGameButton_.click(&saveGame, window);
+    feedButton_.click(&makeFeedable, window);
+    if (feedable_ &&
+            food_.getPosition().x == pet_.getPosition().x &&
+            food_.getPosition().y == pet_.getPosition().y) {
+        gameData_[0] = gameData_[0] + 30;
+        feedable_ = false;
+    }
 
-    pet_.setPosition((setCoordinates(pet_, windowSize, window)));
+    pet_.setPosition((setCoordinates(pet_, true, windowSize, window)));
+    food_.setPosition(setCoordinates(food_, false, windowSize, window));
     pet_.setScale(sf::Vector2f(0.3, 0.3));
     window.draw(pet_);
+    if (feedable_) {
+        window.draw(food_);
+    }
     window.draw(saveGameText_);
 
 }
@@ -51,24 +79,32 @@ void Game::setGameData(std::vector<int> &gameData) {
     gameData_ = gameData;
 }
 
-sf::Vector2f Game::setCoordinates(sf::Sprite &pet, int &windowSize, sf::RenderWindow &window) {
+sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, int &windowSize, sf::RenderWindow &window) {
     int x = sf::Mouse::getPosition(window).x;
-    if (x < 60) {
-        x = 60;
-    }
-    else if (x > windowSize - pet.getGlobalBounds().width - 60) {
-        x = windowSize - pet.getGlobalBounds().width - 60;
-    }
-
     int y = sf::Mouse::getPosition(window).y;
-    if (y < 60) {
-        y = 60;
-    }
-    else if (y > windowSize - pet.getGlobalBounds().height - 60) {
-        y = windowSize - pet.getGlobalBounds().height - 60;
+
+    if (isBounded) {
+        if (x < 60) {
+            x = 60;
+        }
+        else if (x > windowSize - pet.getGlobalBounds().width - 60) {
+            x = windowSize - pet.getGlobalBounds().width - 60;
+        }
+
+        if (y < 60) {
+            y = 60;
+        }
+        else if (y > windowSize - pet.getGlobalBounds().height - 60) {
+            y = windowSize - pet.getGlobalBounds().height - 60;
+        }
+
     }
 
     return sf::Vector2f(x, y);
+}
+
+void Game::makeFeedable() {
+    feedable_ = true;
 }
 
 void Game::displayTime(float elapsedTime, sf::RenderWindow &window) {

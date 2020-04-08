@@ -15,6 +15,7 @@ void Button::click(void (*function)(), sf::RenderWindow &window) {
         if (boundedX && boundedY) {
             (*function)();
         }
+
     }
 }
 

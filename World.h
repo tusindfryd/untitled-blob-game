@@ -7,6 +7,8 @@
 
 #include "Menu.h"
 #include "Game.h"
+#include "Maze.h"
+//#include "Catch.h"
 
 class World {
 

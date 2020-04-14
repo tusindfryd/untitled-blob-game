@@ -14,7 +14,17 @@ class Menu {
 public:
     static bool openedMenu_;
 
-    static void drawMenu(sf::RenderWindow &window, int &windowSize, std::string &gameName);
+    static void drawMenu(sf::RenderWindow &window);
+    static void setMenu(sf::RenderWindow &window, std::string &gameName);
     static void loadGameFile();
     static void newGameFile();
+
+private:
+    static sf::Font headerFont;
+    static sf::Text header;
+    static sf::Font bodyFont;
+    static Button newGame;
+    static sf::Text newGameText;
+    static Button loadGame;
+    static sf::Text loadGameText;
 };

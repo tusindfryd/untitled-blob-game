@@ -21,6 +21,7 @@ void World::run() {
     }
 
     background.setTexture(backgroundTexture);
+    Menu::setMenu(window, gameName_);
     Game::setGame();
     sf::Clock clock;
     if(!Menu::openedMenu_) {
@@ -40,14 +41,16 @@ void World::run() {
             }
         }
         window.draw(background);
+        if (Menu::openedMenu_) {
+            Menu::drawMenu(window);
 
-        if (Menu::openedMenu_){
-            Menu::drawMenu(window, windowSize_, gameName_);
         }
-        else if (!Menu::openedMenu_){
+        else if (!Menu::openedMenu_) {
+
             Game::displayTime(clock.restart().asSeconds() / 10, window);
             Game::drawGame(window, windowSize_);
         }
+
         window.display();
     }
 }

@@ -6,12 +6,18 @@ sf::Sprite Game::pet_;
 sf::Texture Game::petTexture_;
 std::string Game::petTexturePath_ = "character.png";
 
+sf::Texture Game::hungryTexture_;
+std::string Game::hungryTexturePath_ = "hungry.png";
+
 sf::Sprite Game::food_;
 sf::Texture Game::appleTexture_;
 std::string Game::appleTexturePath_ = "apple.png";
 
 Button Game::feedButton_;
 bool Game::feedable_ = false;
+
+Button Game::gameButton_;
+bool Game:: openedCatch_ = false;
 
 Button Game::saveGameButton_;
 sf::Font Game::bodyGameFont_;
@@ -38,6 +44,11 @@ void Game::setGame() {
     }
     pet_.setTexture(petTexture_);
 
+    if (!hungryTexture_.loadFromFile(hungryTexturePath_))
+    {
+        std::cout << "Hungry texture not loaded" << std::endl;
+    }
+
     if (!appleTexture_.loadFromFile(appleTexturePath_))
     {
         std::cout << "Apple texture not loaded" << std::endl;
@@ -45,16 +56,29 @@ void Game::setGame() {
     food_.setTexture(appleTexture_);
 
     feedButton_.setPosition(sf::Vector2f(95,360));
-    feedButton_.setFillColor(sf::Color::Green);
+    feedButton_.setSize(sf::Vector2f(30,30));
+
+    gameButton_.setPosition(sf::Vector2f(185,360));
     feedButton_.setSize(sf::Vector2f(30,30));
 
     timeText_.setFont(bodyGameFont_);
     timeText_.setCharacterSize(31);
     timeText_.setFillColor(sf::Color::Black);
     timeText_.setPosition(sf::Vector2f(80, 5));
+
+    Maze::setMaze(appleTexture_);
 }
 
 void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
+
+    if((sf::Mouse::getPosition(window).x > 62 && sf::Mouse::getPosition(window).y > 62 &&
+        sf::Mouse::getPosition(window).x < windowSize - 62 && sf::Mouse::getPosition(window).y < windowSize - 62)) {
+        window.setMouseCursorVisible(false);
+    }
+    else {
+        window.setMouseCursorVisible(true);
+    }
+
     saveGameButton_.click(&saveGame, window);
     feedButton_.click(&makeFeedable, window);
     if (feedable_ &&
@@ -64,13 +88,31 @@ void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
         feedable_ = false;
     }
 
-    pet_.setPosition((setCoordinates(pet_, true, windowSize, window)));
-    food_.setPosition(setCoordinates(food_, false, windowSize, window));
-    pet_.setScale(sf::Vector2f(0.3, 0.3));
+    gameButton_.click(&openGame, window);
+    if (openedCatch_ && !Maze::gameLost_ && !Maze::gameWon_) {
+        pet_.setScale(sf::Vector2f(0.15, 0.15));
+        Maze::drawMaze(window, pet_);
+    }
+    else if (openedCatch_ && Maze::gameLost_) {
+        Maze::gameLost_ = false;
+        openedCatch_ = false;
+    }
+    else if (openedCatch_ && Maze::gameWon_) {
+        gameData_[0] = gameData_[0] + 30;
+        Maze::gameWon_ = false;
+        openedCatch_ = false;
+    }
+    else {
+        pet_.setScale(sf::Vector2f(0.3, 0.3));
+    }
+
+    pet_.setPosition((setCoordinates(pet_, true, window)));
+    food_.setPosition(setCoordinates(food_, false, window));
     window.draw(pet_);
     if (feedable_) {
         window.draw(food_);
     }
+
     window.draw(saveGameText_);
 
 }
@@ -79,7 +121,11 @@ void Game::setGameData(std::vector<int> &gameData) {
     gameData_ = gameData;
 }
 
-sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, int &windowSize, sf::RenderWindow &window) {
+void Game::openGame() {
+    openedCatch_ = true;
+}
+
+sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWindow &window) {
     int x = sf::Mouse::getPosition(window).x;
     int y = sf::Mouse::getPosition(window).y;
 
@@ -87,15 +133,15 @@ sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, int &windowSi
         if (x < 60) {
             x = 60;
         }
-        else if (x > windowSize - pet.getGlobalBounds().width - 60) {
-            x = windowSize - pet.getGlobalBounds().width - 60;
+        else if (x > window.getSize().x - pet.getGlobalBounds().width - 60) {
+            x = window.getSize().x - pet.getGlobalBounds().width - 60;
         }
 
         if (y < 60) {
             y = 60;
         }
-        else if (y > windowSize - pet.getGlobalBounds().height - 60) {
-            y = windowSize - pet.getGlobalBounds().height - 60;
+        else if (y > window.getSize().y - pet.getGlobalBounds().height - 60) {
+            y = window.getSize().y - pet.getGlobalBounds().height - 60;
         }
 
     }

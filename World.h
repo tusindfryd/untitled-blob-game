@@ -16,6 +16,10 @@ public:
     static void run();
 private:
     static int windowSize_;
+    static int margin_;
     static std::string gameName_;
     static std::string iconPath_;
+    static bool playMusic_;
+
+    static void toggleMusic();
 };

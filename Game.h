@@ -16,13 +16,13 @@ public:
 
     static void setGame();
     static void setGameData(std::vector<int> &gameData);
-    static void drawGame(sf::RenderWindow &window, int &windowSize);
+    static void drawGame(sf::RenderWindow &window, int &windowSize, int &margin);
     static void displayTime(float elapsedTime, sf::RenderWindow &window);
     static void saveGame();
 
 private:
     static float timePoints_;
-    static sf::Vector2f setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWindow &window);
+    static sf::Vector2f setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWindow &window, int &margin);
     static sf::Sprite pet_;
     static sf::Texture petTexture_;
     static std::string petTexturePath_;

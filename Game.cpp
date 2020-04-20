@@ -57,9 +57,9 @@ void Game::setGame() {
     Maze::setMaze(appleTexture_);
 }
 
-void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
-    if((sf::Mouse::getPosition(window).x > 62 && sf::Mouse::getPosition(window).y > 62 &&
-        sf::Mouse::getPosition(window).x < windowSize - 62 && sf::Mouse::getPosition(window).y < windowSize - 62)) {
+void Game::drawGame(sf::RenderWindow &window, int &windowSize, int &margin) {
+    if((sf::Mouse::getPosition(window).x > margin && sf::Mouse::getPosition(window).y > margin &&
+        sf::Mouse::getPosition(window).x < windowSize - margin && sf::Mouse::getPosition(window).y < windowSize - margin)) {
         window.setMouseCursorVisible(false);
     }
     else {
@@ -77,7 +77,7 @@ void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
 
     gameButton_.click(&openGame, window);
     if (openedCatch_ && !Maze::gameLost_ && !Maze::gameWon_) {
-        pet_.setScale(sf::Vector2f(0.15, 0.15));
+        pet_.setScale(sf::Vector2f(0.5, 0.5));
         Maze::drawMaze(window, pet_);
     }
     else if (openedCatch_ && Maze::gameLost_) {
@@ -90,11 +90,11 @@ void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
         openedCatch_ = false;
     }
     else {
-        pet_.setScale(sf::Vector2f(0.3, 0.3));
+        pet_.setScale(sf::Vector2f(1, 1));
     }
 
-    pet_.setPosition((setCoordinates(pet_, true, window)));
-    food_.setPosition(setCoordinates(food_, false, window));
+    pet_.setPosition((setCoordinates(pet_, true, window, margin)));
+    food_.setPosition(setCoordinates(food_, false, window, margin));
     window.draw(pet_);
     if (feedable_) {
         window.draw(food_);
@@ -111,23 +111,23 @@ void Game::openGame() {
     openedCatch_ = true;
 }
 
-sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWindow &window) {
+sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWindow &window, int &margin) {
     int x = sf::Mouse::getPosition(window).x;
     int y = sf::Mouse::getPosition(window).y;
 
     if (isBounded) {
-        if (x < 60) {
-            x = 60;
+        if (x < margin) {
+            x = margin;
         }
-        else if (x > window.getSize().x - pet.getGlobalBounds().width - 60) {
-            x = window.getSize().x - pet.getGlobalBounds().width - 60;
+        else if (x > window.getSize().x - pet.getGlobalBounds().width - margin) {
+            x = window.getSize().x - pet.getGlobalBounds().width - margin;
         }
 
-        if (y < 60) {
-            y = 60;
+        if (y < margin) {
+            y = margin;
         }
-        else if (y > window.getSize().y - pet.getGlobalBounds().height - 60) {
-            y = window.getSize().y - pet.getGlobalBounds().height - 60;
+        else if (y > window.getSize().y - pet.getGlobalBounds().height - margin) {
+            y = window.getSize().y - pet.getGlobalBounds().height - margin;
         }
 
     }

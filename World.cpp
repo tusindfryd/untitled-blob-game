@@ -1,8 +1,10 @@
 #include "World.h"
 
 int World::windowSize_ = 400;
+int World::margin_ = 62;
 std::string World::gameName_ = "Untitled Blob Game";
 std::string World::iconPath_ = "assets/images/icon2.png";
+bool World::playMusic_ = true;
 
 void World::run() {
 
@@ -12,6 +14,9 @@ void World::run() {
     icon.loadFromFile(iconPath_);
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
+    Button playMusicButton;
+    playMusicButton.setPosition(305, 10);
+    playMusicButton.setSize(sf::Vector2f(40, 40));
     sf::Music music;
     if (!music.openFromFile("assets/sounds/music.ogg")) {
         std::cout << "Music not loaded" << std::endl;
@@ -51,6 +56,14 @@ void World::run() {
             }
         }
         window.draw(background);
+        if (!playMusic_) {
+            music.setVolume(0);
+        }
+        else {
+            music.setVolume(100);
+        }
+        playMusicButton.click(&toggleMusic, window);
+
         if (Menu::openedMenu_) {
             Menu::drawMenu(window);
 
@@ -58,9 +71,18 @@ void World::run() {
         else if (!Menu::openedMenu_) {
 
             Game::displayTime(clock.restart().asSeconds() / 10, window);
-            Game::drawGame(window, windowSize_);
+            Game::drawGame(window, windowSize_, margin_);
         }
 
         window.display();
+    }
+}
+
+void World::toggleMusic() {
+    if (playMusic_) {
+        playMusic_ = false;
+    }
+    else if (!playMusic_) {
+        playMusic_ = true;
     }
 }

@@ -4,14 +4,11 @@ std::vector<int> Game::gameData_(10, 0);
 float Game::timePoints_;
 sf::Sprite Game::pet_;
 sf::Texture Game::petTexture_;
-std::string Game::petTexturePath_ = "character.png";
-
-sf::Texture Game::hungryTexture_;
-std::string Game::hungryTexturePath_ = "hungry.png";
+std::string Game::petTexturePath_ = "assets/images/character.png";
 
 sf::Sprite Game::food_;
 sf::Texture Game::appleTexture_;
-std::string Game::appleTexturePath_ = "apple.png";
+std::string Game::appleTexturePath_ = "assets/images/apple.png";
 
 Button Game::feedButton_;
 bool Game::feedable_ = false;
@@ -21,33 +18,24 @@ bool Game:: openedCatch_ = false;
 
 Button Game::saveGameButton_;
 sf::Font Game::bodyGameFont_;
-std::string Game::fontPath_ = "bodyfont.ttf";
-sf::Text Game::saveGameText_;
+std::string Game::fontPath_ = "assets/fonts/bodyfont.ttf";
 
 sf::Text Game::timeText_;
 
 void Game::setGame() {
-    saveGameButton_.setPosition(sf::Vector2f(250, 0));
+    saveGameButton_.setPosition(sf::Vector2f(210, 10));
+    saveGameButton_.setSize(sf::Vector2f(40, 40));
     if (!bodyGameFont_.loadFromFile(fontPath_))
     {
         std::cout << "Error: Font not loaded" << std::endl;
     }
-    saveGameText_.setFont(bodyGameFont_);
-    saveGameText_.setString("Save Game");
-    saveGameText_.setCharacterSize(31);
-    saveGameText_.setPosition(sf::Vector2f(250, 5));
-    saveGameText_.setFillColor(sf::Color::Black);
+
 
     if (!petTexture_.loadFromFile(petTexturePath_))
     {
         std::cout << "Pet texture not loaded" << std::endl;
     }
     pet_.setTexture(petTexture_);
-
-    if (!hungryTexture_.loadFromFile(hungryTexturePath_))
-    {
-        std::cout << "Hungry texture not loaded" << std::endl;
-    }
 
     if (!appleTexture_.loadFromFile(appleTexturePath_))
     {
@@ -59,18 +47,17 @@ void Game::setGame() {
     feedButton_.setSize(sf::Vector2f(30,30));
 
     gameButton_.setPosition(sf::Vector2f(185,360));
-    feedButton_.setSize(sf::Vector2f(30,30));
+    gameButton_.setSize(sf::Vector2f(30,30));
 
     timeText_.setFont(bodyGameFont_);
     timeText_.setCharacterSize(31);
     timeText_.setFillColor(sf::Color::Black);
-    timeText_.setPosition(sf::Vector2f(80, 5));
+    timeText_.setPosition(sf::Vector2f(110, 5));
 
     Maze::setMaze(appleTexture_);
 }
 
 void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
-
     if((sf::Mouse::getPosition(window).x > 62 && sf::Mouse::getPosition(window).y > 62 &&
         sf::Mouse::getPosition(window).x < windowSize - 62 && sf::Mouse::getPosition(window).y < windowSize - 62)) {
         window.setMouseCursorVisible(false);
@@ -113,7 +100,6 @@ void Game::drawGame(sf::RenderWindow &window, int &windowSize) {
         window.draw(food_);
     }
 
-    window.draw(saveGameText_);
 
 }
 

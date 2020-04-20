@@ -15,7 +15,7 @@ public:
     static bool openedMenu_;
 
     static void drawMenu(sf::RenderWindow &window);
-    static void setMenu(sf::RenderWindow &window, std::string &gameName);
+    static void setMenu(std::string &gameName);
     static void loadGameFile();
     static void newGameFile();
 

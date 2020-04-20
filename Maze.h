@@ -16,10 +16,16 @@ public:
     static bool gameWon_;
     static bool gameLost_;
 private:
+    static sf::Sound lostSound;
+    static sf::SoundBuffer lostBuffer;
+    static sf::Sound wonSound;
+    static sf::SoundBuffer wonBuffer;
+
     static bool isTouchingWall(sf::Sprite &sprite);
     static int map_[6][6];
     static std::vector <sf::RectangleShape> tiles_;
     static sf::Sprite apple_;
     static void foundApple(sf::Sprite &sprite);
+
 };
 

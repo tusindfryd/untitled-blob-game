@@ -9,9 +9,9 @@ sf::Text Menu::newGameText;
 Button Menu::loadGame;
 sf::Text Menu::loadGameText;
 
-void Menu::setMenu(sf::RenderWindow &window, std::string &gameName) {
+void Menu::setMenu(std::string &gameName) {
 
-    if (!headerFont.loadFromFile("headerfont.ttf"))
+    if (!headerFont.loadFromFile("assets/fonts/headerfont.ttf"))
     {
         std::cout << "Error: Header font not loaded" << std::endl;
     }
@@ -29,16 +29,10 @@ void Menu::setMenu(sf::RenderWindow &window, std::string &gameName) {
     header.setPosition(sf::Vector2f(100, 80));
 
 
-    if (!bodyFont.loadFromFile("bodyfont.ttf"))
+    if (!bodyFont.loadFromFile("assets/fonts/bodyfont.ttf"))
     {
         std::cout << "Error: Body font not loaded" << std::endl;
     }
-    //    sf::Text description;
-    //    description.setFont(bodyFont);
-    //    description.setString("but without having to actually clean \nthe aquarium off algae and stuff");
-    //    description.setCharacterSize(45);
-    //    description.setPosition(sf::Vector2f(275, 320));
-
 
     newGame.setPosition(sf::Vector2f(60, 250));
     newGameText.setFont(bodyFont);
@@ -58,7 +52,6 @@ void Menu::setMenu(sf::RenderWindow &window, std::string &gameName) {
 void Menu::drawMenu(sf::RenderWindow &window) {
 
     window.draw(header);
-    //   window.draw(description);
     newGame.click(&newGameFile, window);
     loadGame.click(&loadGameFile, window);
     window.draw(loadGameText);

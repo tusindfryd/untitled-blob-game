@@ -2,7 +2,7 @@
 
 int World::windowSize_ = 400;
 std::string World::gameName_ = "Untitled Blob Game";
-std::string World::iconPath_ = "icon2.png";
+std::string World::iconPath_ = "assets/images/icon2.png";
 
 void World::run() {
 
@@ -12,23 +12,33 @@ void World::run() {
     icon.loadFromFile(iconPath_);
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
+    sf::Music music;
+    if (!music.openFromFile("assets/sounds/music.ogg")) {
+        std::cout << "Music not loaded" << std::endl;
+    }
+    music.setLoop(true);
+    music.play();
+
     sf::Sprite background;
     sf::Texture backgroundTexture;
     backgroundTexture.setSmooth(false);
-    if (!backgroundTexture.loadFromFile("bg.png"))
+    if (!backgroundTexture.loadFromFile("assets/images/bg.png"))
     {
         std::cout << "Background texture not loaded" << std::endl;
     }
 
+    Button::setSound();
     background.setTexture(backgroundTexture);
-    Menu::setMenu(window, gameName_);
+    Menu::setMenu(gameName_);
     Game::setGame();
+
+
     sf::Clock clock;
     if(!Menu::openedMenu_) {
         clock.restart();
     }
     while (window.isOpen()) {
-        window.clear(sf::Color(120, 128, 74));
+        window.clear(sf::Color(147, 202, 91));
 
         sf::Event event;
         while (window.pollEvent(event)) {

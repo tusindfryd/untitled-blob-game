@@ -4,11 +4,11 @@
 #include <string>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Menu.h"
 #include "Game.h"
 #include "Maze.h"
-//#include "Catch.h"
 
 class World {
 

@@ -1,5 +1,6 @@
 #include "Maze.h"
 
+
 int Maze::map_[6][6] = {{1, 1, 1, 1, 1, 1},
                         {1, 1, 0, 0, 0, 1},
                         {1, 0, 0, 1, 0, 1},
@@ -7,13 +8,30 @@ int Maze::map_[6][6] = {{1, 1, 1, 1, 1, 1},
                         {1, 2, 1, 0, 0, 1},
                         {1, 1, 0, 0, 1, 1}};
 
+
 sf::Sprite Maze::apple_;
 std::vector <sf::RectangleShape> Maze::tiles_;
 
 bool Maze::gameWon_ = false;
 bool Maze::gameLost_ = false;
 
+sf::Sound Maze::lostSound;
+sf::SoundBuffer Maze::lostBuffer;
+sf::Sound Maze::wonSound;
+sf::SoundBuffer Maze::wonBuffer;
+
 void Maze::setMaze(sf::Texture &appleTexture_) {
+
+    if (!lostBuffer.loadFromFile("assets/sounds/lost.wav")) {
+        std::cout << "Game lost sound not loaded" << std::endl;
+    }
+    lostSound.setBuffer(lostBuffer);
+
+    if (!wonBuffer.loadFromFile("assets/sounds/won.wav")) {
+        std::cout << "Game won sound not loaded" << std::endl;
+    }
+    wonSound.setBuffer(wonBuffer);
+
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
             sf::RectangleShape tmp_tile;
@@ -38,8 +56,29 @@ void Maze::drawMaze(sf::RenderWindow &window, sf::Sprite &sprite) {
     foundApple(sprite);
 
     if (isTouchingWall(sprite)) {
+        lostSound.play();
         gameLost_ = true;
     }
+
+    sf::RectangleShape borderTop;
+    borderTop.setFillColor(sf::Color::Black);
+    borderTop.setSize(sf::Vector2f(276, 4));
+    borderTop.setPosition(sf::Vector2f(62,58));
+
+    sf::RectangleShape borderBottom = borderTop;
+    borderBottom.setPosition(sf::Vector2f(62,338));
+
+    sf::RectangleShape borderLeft = borderTop;
+    borderLeft.setSize(sf::Vector2f(4, 276));
+    borderLeft.setPosition(sf::Vector2f(58,62));
+
+    sf::RectangleShape borderRight = borderLeft;
+    borderRight.setPosition(338, 62);
+
+    window.draw(borderTop);
+    window.draw(borderBottom);
+    window.draw(borderLeft);
+    window.draw(borderRight);
 
     window.draw(apple_);
     for (auto &el : tiles_) {
@@ -72,7 +111,12 @@ void Maze::foundApple(sf::Sprite &sprite) {
     if (isTouchingTopWall && isAtSameWidth) {
         gameWon_ = true;
     }
+
+    if (gameWon_) {
+        wonSound.play();
+    }
 }
+
 
 bool Maze::isTouchingWall(sf::Sprite &sprite) {
     bool isTouchingWall_ = false;

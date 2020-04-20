@@ -40,6 +40,5 @@ private:
     static Button saveGameButton_;
     static sf::Font bodyGameFont_;
     static std::string fontPath_;
-    static sf::Text saveGameText_;
     static sf::Text timeText_;
 };

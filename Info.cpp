@@ -9,8 +9,8 @@ void Info::setInfo(sf::Font &font) {
     infoBackground_.setSize(sf::Vector2f(280, 276));
     infoBackground_.setPosition(sf::Vector2f(60, 62));
     info_.setFont(font);
-    info_.setString("Credits \n\n Fonts: \n Pixelated by Skylar Park \n Alagard by Hewett Tsoi \n\n Music: \n \"Opening\" by t4ngr4m \n\n Sounds: \n Little Robot Sound Factory");
-    info_.setCharacterSize(16);
+    info_.setString("\t\t\t\t\t Credits \n Fonts: Pixelated \n by Skylar Park \n Music: \"Opening\" \n by t4ngr4m \n Sounds: Little Robot \n Sound Factory");
+    info_.setCharacterSize(30);
     info_.setFillColor(sf::Color::Black);
     info_.setPosition(sf::Vector2f(65, 65));
 }

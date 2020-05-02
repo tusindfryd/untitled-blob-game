@@ -18,7 +18,7 @@ bool Game:: openedCatch_ = false;
 
 Button Game::saveGameButton_;
 sf::Font Game::bodyGameFont_;
-std::string Game::fontPath_ = "assets/fonts/bodyfont.ttf";
+std::string Game::fontPath_ = "assets/fonts/pixelated.ttf";
 
 sf::Text Game::timeText_;
 

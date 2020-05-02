@@ -18,13 +18,14 @@ public:
     static void setMenu(std::string &gameName);
     static void loadGameFile();
     static void newGameFile();
-    static sf::Font bodyFont;
+    static sf::Font font_;
 
 private:
-    static sf::Font headerFont;
-    static sf::Text header;
-    static Button newGame;
-    static sf::Text newGameText;
-    static Button loadGame;
-    static sf::Text loadGameText;
+    static sf::Text header_;
+    static Button newGame_;
+    static sf::Text newGameText_;
+    static Button loadGame_;
+    static sf::Text loadGameText_;
+    static sf::Texture menuImageTexture_;
+    static sf::Sprite menuImage_;
 };

@@ -40,7 +40,7 @@ void World::run() {
     background.setTexture(backgroundTexture);
     Menu::setMenu(gameName_);
     Game::setGame();
-    Info::setInfo(Menu::bodyFont);
+    Info::setInfo(Menu::font_);
 
     sf::Clock clock;
     if(!Menu::openedMenu_) {

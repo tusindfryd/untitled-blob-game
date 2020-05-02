@@ -24,6 +24,10 @@ void World::run() {
     music.setLoop(true);
     music.play();
 
+    Button showInfoButton;
+    showInfoButton.setPosition(255, 10);
+    showInfoButton.setSize(sf::Vector2f(40, 40));
+
     sf::Sprite background;
     sf::Texture backgroundTexture;
     backgroundTexture.setSmooth(false);
@@ -36,7 +40,7 @@ void World::run() {
     background.setTexture(backgroundTexture);
     Menu::setMenu(gameName_);
     Game::setGame();
-
+    Info::setInfo(Menu::bodyFont);
 
     sf::Clock clock;
     if(!Menu::openedMenu_) {
@@ -63,6 +67,7 @@ void World::run() {
             music.setVolume(100);
         }
         playMusicButton.click(&toggleMusic, window);
+        showInfoButton.click(&toggleInfo, window);
 
         if (Menu::openedMenu_) {
             Menu::drawMenu(window);
@@ -72,6 +77,10 @@ void World::run() {
 
             Game::displayTime(clock.restart().asSeconds() / 10, window);
             Game::drawGame(window, windowSize_, margin_);
+        }
+
+        if (Info::openedInfo_) {
+            Info::drawInfo(window);
         }
 
         window.display();
@@ -84,5 +93,14 @@ void World::toggleMusic() {
     }
     else if (!playMusic_) {
         playMusic_ = true;
+    }
+}
+
+void World::toggleInfo() {
+    if (Info::openedInfo_) {
+        Info::openedInfo_ = false;
+    }
+    else if (!Info::openedInfo_) {
+        Info::openedInfo_ = true;
     }
 }

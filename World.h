@@ -9,6 +9,7 @@
 #include "Menu.h"
 #include "Game.h"
 #include "Maze.h"
+#include "Info.h"
 
 class World {
 
@@ -22,4 +23,5 @@ private:
     static bool playMusic_;
 
     static void toggleMusic();
+    static void toggleInfo();
 };

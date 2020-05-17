@@ -4,7 +4,7 @@ int World::windowSize_ = 400;
 int World::margin_ = 62;
 std::string World::gameName_ = "Untitled Blob Game";
 std::string World::iconPath_ = "assets/images/icon2.png";
-bool World::playMusic_ = true;
+bool World::playMusic_ = false;
 
 void World::run() {
 

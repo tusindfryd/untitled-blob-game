@@ -11,6 +11,7 @@ int Maze::map_[6][6] = {{1, 1, 1, 1, 1, 1},
 
 sf::Sprite Maze::apple_;
 std::vector <sf::RectangleShape> Maze::tiles_;
+sf::Texture Maze::smallPetTexture_;
 
 bool Maze::gameWon_ = false;
 bool Maze::gameLost_ = false;
@@ -21,6 +22,10 @@ sf::Sound Maze::wonSound;
 sf::SoundBuffer Maze::wonBuffer;
 
 void Maze::setMaze(sf::Texture &appleTexture_) {
+    if (!smallPetTexture_.loadFromFile("assets/images/charactergame.png"))
+    {
+        std::cout << "Small pet texture not loaded" << std::endl;
+    }
 
     if (!lostBuffer.loadFromFile("assets/sounds/lost.wav")) {
         std::cout << "Game lost sound not loaded" << std::endl;
@@ -54,6 +59,7 @@ void Maze::setMaze(sf::Texture &appleTexture_) {
 
 void Maze::drawMaze(sf::RenderWindow &window, sf::Sprite &sprite) {
     foundApple(sprite);
+    sprite.setTexture(smallPetTexture_, true);
 
     if (isTouchingWall(sprite)) {
         lostSound.play();

@@ -20,6 +20,7 @@ private:
     static sf::SoundBuffer lostBuffer;
     static sf::Sound wonSound;
     static sf::SoundBuffer wonBuffer;
+    static sf::Texture smallPetTexture_;
 
     static bool isTouchingWall(sf::Sprite &sprite);
     static int map_[6][6];

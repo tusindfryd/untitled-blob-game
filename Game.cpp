@@ -14,13 +14,17 @@ Button Game::feedButton_;
 bool Game::feedable_ = false;
 
 Button Game::gameButton_;
-bool Game:: openedCatch_ = false;
+bool Game:: openedMaze_ = false;
 
 Button Game::saveGameButton_;
 sf::Font Game::bodyGameFont_;
 std::string Game::fontPath_ = "assets/fonts/pixelated.ttf";
 
 sf::Text Game::timeText_;
+
+sf::Sprite Game::scenery_;
+Button Game::sceneryChooserButton_;
+std::vector<sf::Texture> Game::sceneries_;
 
 void Game::setGame() {
     saveGameButton_.setPosition(sf::Vector2f(210, 10));
@@ -49,12 +53,35 @@ void Game::setGame() {
     gameButton_.setPosition(sf::Vector2f(185,360));
     gameButton_.setSize(sf::Vector2f(30,30));
 
+    sceneryChooserButton_.setPosition(sf::Vector2f(275, 360));
+    sceneryChooserButton_.setSize(sf::Vector2f(30, 30));
+
     timeText_.setFont(bodyGameFont_);
     timeText_.setCharacterSize(31);
     timeText_.setFillColor(sf::Color::Black);
     timeText_.setPosition(sf::Vector2f(110, 5));
 
     Maze::setMaze(appleTexture_);
+
+    sceneries_.resize(4);
+    if (!sceneries_[0].create(400, 400))
+    {
+        std::cout << "Empty scenery texture not created" << std::endl;
+    }
+    if (!sceneries_[1].loadFromFile("assets/images/basic.png"))
+    {
+        std::cout << "Basic scenery texture not loaded" << std::endl;
+    }
+    if (!sceneries_[2].loadFromFile("assets/images/cute.png"))
+    {
+        std::cout << "Cute scenery texture not loaded" << std::endl;
+    }
+    if (!sceneries_[3].loadFromFile("assets/images/color.png"))
+    {
+        std::cout << "Color scenery texture not loaded" << std::endl;
+    }
+    scenery_.setTexture(sceneries_[gameData_[1]]);
+    Scenery::setSceneryChooser(bodyGameFont_);
 }
 
 void Game::drawGame(sf::RenderWindow &window, int &windowSize, int &margin) {
@@ -76,22 +103,34 @@ void Game::drawGame(sf::RenderWindow &window, int &windowSize, int &margin) {
     }
 
     gameButton_.click(&openGame, window);
-    if (openedCatch_ && !Maze::gameLost_ && !Maze::gameWon_) {
-        pet_.setScale(sf::Vector2f(0.5, 0.5));
+    sceneryChooserButton_.click(&openSceneryChooser, window);
+    if(Scenery::updateNeeded_) {
+        gameData_[1] = Scenery::choosenSceneryIndex_;
+        Scenery::updateNeeded_ = false;
+    }
+    scenery_.setTexture(sceneries_[gameData_[1]]);
+    if (Scenery::openedSceneryChooser_) {
+        window.draw(scenery_);
+        Scenery::drawSceneryChooser(window, gameData_[0]);
+    }
+    else if (openedMaze_ && !Maze::gameLost_ && !Maze::gameWon_) {
         Maze::drawMaze(window, pet_);
     }
-    else if (openedCatch_ && Maze::gameLost_) {
+    else if (openedMaze_ && Maze::gameLost_) {
         Maze::gameLost_ = false;
-        openedCatch_ = false;
+        openedMaze_ = false;
     }
-    else if (openedCatch_ && Maze::gameWon_) {
+    else if (openedMaze_ && Maze::gameWon_) {
         gameData_[0] = gameData_[0] + 30;
         Maze::gameWon_ = false;
-        openedCatch_ = false;
+        openedMaze_ = false;
     }
     else {
+        window.draw(scenery_);
+        pet_.setTexture(petTexture_, true);
         pet_.setScale(sf::Vector2f(1, 1));
     }
+
 
     pet_.setPosition((setCoordinates(pet_, true, window, margin)));
     food_.setPosition(setCoordinates(food_, false, window, margin));
@@ -108,7 +147,11 @@ void Game::setGameData(std::vector<int> &gameData) {
 }
 
 void Game::openGame() {
-    openedCatch_ = true;
+    openedMaze_ = true;
+}
+
+void Game::openSceneryChooser() {
+    Scenery::openedSceneryChooser_ = true;
 }
 
 sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWindow &window, int &margin) {

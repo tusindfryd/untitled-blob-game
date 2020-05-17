@@ -9,10 +9,11 @@
 
 #include "Button.h"
 #include "Maze.h"
+#include "Scenery.h"
 
 class Game {
 public:
-    static bool openedCatch_;
+    static bool openedMaze_;
 
     static void setGame();
     static void setGameData(std::vector<int> &gameData);
@@ -41,4 +42,8 @@ private:
     static sf::Font bodyGameFont_;
     static std::string fontPath_;
     static sf::Text timeText_;
+    static void openSceneryChooser();
+    static Button sceneryChooserButton_;
+    static std::vector<sf::Texture> sceneries_;
+    static sf::Sprite scenery_;
 };

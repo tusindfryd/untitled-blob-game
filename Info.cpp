@@ -6,8 +6,8 @@ sf::RectangleShape Info::infoBackground_;
 
 void Info::setInfo(sf::Font &font) {
     infoBackground_.setFillColor(sf::Color(147, 202, 91));
-    infoBackground_.setSize(sf::Vector2f(280, 276));
-    infoBackground_.setPosition(sf::Vector2f(60, 62));
+    infoBackground_.setSize(sf::Vector2f(284, 284));
+    infoBackground_.setPosition(sf::Vector2f(58, 58));
     info_.setFont(font);
     info_.setString("\t\t\t\t\t Credits \n Fonts: Pixelated \n by Skylar Park \n Music: \"Opening\" \n by t4ngr4m \n Sounds: Little Robot \n Sound Factory");
     info_.setCharacterSize(30);

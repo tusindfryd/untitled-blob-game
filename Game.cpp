@@ -197,6 +197,7 @@ void Game::displayTime(float elapsedTime, sf::RenderWindow &window) {
 }
 
 void Game::saveGame() {
+    gameData_[3] = time(0);
     std::fstream gameData;
     gameData.open("gamedata.txt", std::ios::out);
     if (!gameData.is_open()) {

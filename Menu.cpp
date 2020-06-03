@@ -68,6 +68,14 @@ void Menu::loadGameFile() {
     while(getline(gameData, line)) {
         gameDataTmp.emplace_back(stoi(line));
     }
+
+    int timeBreakPoints = double(3600 / int(time(0) - gameDataTmp[3]) * 100);
+    if (timeBreakPoints > 100) {
+        gameDataTmp[0] += 100;
+    }
+    else {
+        gameDataTmp[0] += timeBreakPoints;
+    }
     Game::setGameData(gameDataTmp);
     gameData.close();
     openedMenu_ = 0;

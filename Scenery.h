@@ -26,5 +26,7 @@ private:
     static void setScenery1();
     static void setScenery2();
     static void setScenery3();
+    static sf::Sprite buttonborders_;
+    static sf::Texture buttonborderstexture_;
 };
 

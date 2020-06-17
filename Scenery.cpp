@@ -6,6 +6,8 @@ std::vector<sf::Text> Scenery::labels_;
 std::vector<bool> Scenery::setters_{true, false, false, false};
 bool Scenery::updateNeeded_ = false;
 int Scenery::choosenSceneryIndex_ = 0;
+sf::Sprite Scenery::buttonborders_;
+sf::Texture Scenery::buttonborderstexture_;
 
 void Scenery::setSceneryChooser(sf::Font &font) {
 
@@ -27,6 +29,12 @@ void Scenery::setSceneryChooser(sf::Font &font) {
     labels_[1].setString("200");
     labels_[2].setString("400");
     labels_[3].setString("600");
+
+    if (!buttonborderstexture_.loadFromFile("assets/images/buttonborders.png"))
+    {
+        std::cout << "Button borders texture not loaded" << std::endl;
+    }
+    buttonborders_.setTexture(buttonborderstexture_);
 }
 
 void Scenery::drawSceneryChooser(sf::RenderWindow &window, int &timePoints) {
@@ -34,6 +42,7 @@ void Scenery::drawSceneryChooser(sf::RenderWindow &window, int &timePoints) {
         window.draw(buttons_[i]);
         window.draw(labels_[i]);
     }
+    window.draw(buttonborders_);
     buttons_[0].click(setScenery0, window);
     if (timePoints > 200) {
         buttons_[1].click(setScenery1, window);
@@ -45,7 +54,7 @@ void Scenery::drawSceneryChooser(sf::RenderWindow &window, int &timePoints) {
         buttons_[3].click(setScenery3, window);
     }
 
-    for (int i = 0; i < setters_.size(); i++) {
+    for (unsigned int i = 0; i < setters_.size(); i++) {
         if (setters_[i]) {
              choosenSceneryIndex_ = i;
              break;

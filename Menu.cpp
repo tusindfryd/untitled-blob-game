@@ -62,23 +62,24 @@ void Menu::loadGameFile() {
     if (!gameData.is_open()) {
         std::cout << "Warning: Game data not loaded. \nCreating a new game file." << std::endl;
         newGameFile();
-    }
-    std::string line;
-    std::vector<int> gameDataTmp;
-    while(getline(gameData, line)) {
-        gameDataTmp.emplace_back(stoi(line));
-    }
+    } else {
+        std::string line;
+        std::vector<int> gameDataTmp;
+        while(getline(gameData, line)) {
+            gameDataTmp.emplace_back(stoi(line));
+        }
 
-    int timeBreakPoints = double(3600 / int(time(0) - gameDataTmp[3]) * 100);
-    if (timeBreakPoints > 100) {
-        gameDataTmp[0] += 100;
+        int timeBreakPoints = double(3600 / int(time(0) - gameDataTmp[3]) * 100);
+        if (timeBreakPoints > 100) {
+            gameDataTmp[0] += 100;
+        }
+        else {
+            gameDataTmp[0] += timeBreakPoints;
+        }
+        Game::setGameData(gameDataTmp);
+        gameData.close();
+        openedMenu_ = 0;
     }
-    else {
-        gameDataTmp[0] += timeBreakPoints;
-    }
-    Game::setGameData(gameDataTmp);
-    gameData.close();
-    openedMenu_ = 0;
 }
 
 void Menu::newGameFile() {

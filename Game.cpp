@@ -147,6 +147,7 @@ void Game::setGameData(std::vector<int> &gameData) {
 }
 
 void Game::openGame() {
+    Maze::randomizeMaze(appleTexture_);
     openedMaze_ = true;
 }
 

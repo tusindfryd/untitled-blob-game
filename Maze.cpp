@@ -1,13 +1,42 @@
 #include "Maze.h"
 
+int Maze::map_[6][6] = {0};
 
-int Maze::map_[6][6] = {{1, 1, 1, 1, 1, 1},
+int Maze::map0_[6][6] = {{1, 1, 1, 1, 1, 1},
                         {1, 1, 0, 0, 0, 1},
                         {1, 0, 0, 1, 0, 1},
                         {1, 0, 1, 1, 0, 1},
                         {1, 2, 1, 0, 0, 1},
                         {1, 1, 0, 0, 1, 1}};
 
+int Maze::map1_[6][6] = {{1, 1, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 1},
+                        {1, 0, 1, 1, 0, 1},
+                        {1, 0, 2, 1, 0, 1},
+                        {1, 1, 1, 1, 0, 1},
+                        {1, 1, 0, 0, 0, 1}};
+
+int Maze::map2_[6][6] = {{1, 1, 1, 1, 1, 1},
+                        {1, 1, 0, 1, 1, 1},
+                        {1, 0, 0, 0, 1, 1},
+                        {1, 0, 1, 0, 2, 1},
+                        {1, 0, 0, 1, 1, 1},
+                        {1, 1, 0, 0, 1, 1}};
+
+int Maze::map3_[6][6] = {{1, 1, 1, 1, 1, 1},
+                        {1, 1, 0, 0, 2, 1},
+                        {1, 0, 0, 1, 1, 1},
+                        {1, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 1, 1, 1},
+                        {1, 1, 0, 0, 0, 1}};
+
+
+int Maze::map4_[6][6] = {{1, 1, 1, 2, 1, 1},
+                        {1, 1, 0, 0, 1, 1},
+                        {1, 0, 0, 1, 1, 1},
+                        {1, 0, 1, 1, 1, 1},
+                        {1, 0, 0, 1, 1, 1},
+                        {1, 1, 0, 0, 1, 1}};
 
 sf::Sprite Maze::apple_;
 std::vector <sf::RectangleShape> Maze::tiles_;
@@ -22,6 +51,7 @@ sf::Sound Maze::wonSound;
 sf::SoundBuffer Maze::wonBuffer;
 
 void Maze::setMaze(sf::Texture &appleTexture_) {
+    randomizeMaze(appleTexture_);
     if (!smallPetTexture_.loadFromFile("assets/images/charactergame.png"))
     {
         std::cout << "Small pet texture not loaded" << std::endl;
@@ -36,6 +66,32 @@ void Maze::setMaze(sf::Texture &appleTexture_) {
         std::cout << "Game won sound not loaded" << std::endl;
     }
     wonSound.setBuffer(wonBuffer);
+
+}
+
+void Maze::randomizeMaze(sf::Texture &appleTexture_) {
+    int randomMaze = rand() % 5;
+    switch (randomMaze) {
+    case 0:
+        std::copy(&map0_[0][0], &map0_[0][0]+6*6,&map_[0][0]);
+        break;
+    case 1:
+        std::copy(&map1_[0][0], &map1_[0][0]+6*6,&map_[0][0]);
+        break;
+    case 2:
+        std::copy(&map2_[0][0], &map2_[0][0]+6*6,&map_[0][0]);
+        break;
+    case 3:
+        std::copy(&map3_[0][0], &map3_[0][0]+6*6,&map_[0][0]);
+        break;
+    case 4:
+        std::copy(&map4_[0][0], &map4_[0][0]+6*6,&map_[0][0]);
+        break;
+    default:
+        break;
+    }
+
+    tiles_.clear();
 
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {

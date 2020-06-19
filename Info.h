@@ -10,6 +10,8 @@ public:
     static bool openedInfo_;
     static void setInfo(sf::Font &font);
     static void drawInfo(sf::RenderWindow &window);
+    static void scrollInfo(int wheelDelta);
+    static void setInfoPositionBack();
 
 private:
     static sf::Text info_;

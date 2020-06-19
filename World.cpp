@@ -55,6 +55,9 @@ void World::run() {
             case sf::Event::Closed:
                 window.close();
                 break;
+            case sf::Event::MouseWheelMoved:
+                Info::scrollInfo(event.mouseWheel.delta);
+                break;
             default:
                 break;
             }
@@ -81,6 +84,10 @@ void World::run() {
 
         if (Info::openedInfo_) {
             Info::drawInfo(window);
+            window.draw(background);
+            if (!Menu::openedMenu_) {
+                Game::displayTime(clock.restart().asSeconds() / 10, window);
+            }
         }
 
         window.display();
@@ -99,6 +106,7 @@ void World::toggleMusic() {
 void World::toggleInfo() {
     if (Info::openedInfo_) {
         Info::openedInfo_ = false;
+        Info::setInfoPositionBack();
     }
     else if (!Info::openedInfo_) {
         Info::openedInfo_ = true;

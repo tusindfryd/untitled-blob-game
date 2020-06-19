@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <thread>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -32,6 +34,15 @@ private:
     static sf::Sprite food_;
     static sf::Texture appleTexture_;
     static std::string appleTexturePath_;
+    static sf::Texture pearTexture_;
+    static std::string pearTexturePath_;
+    static sf::Texture lemonTexture_;
+    static std::string lemonTexturePath_;
+    static sf::Sound fedSound;
+    static sf::SoundBuffer fedBuffer;
+    static int foodIndex_;
+    static int foodPoints_;
+    static void randomizeFood();
     static Button feedButton_;
     static void makeFeedable();
     static bool feedable_;

@@ -9,6 +9,16 @@ std::string Game::petTexturePath_ = "assets/images/character.png";
 sf::Sprite Game::food_;
 sf::Texture Game::appleTexture_;
 std::string Game::appleTexturePath_ = "assets/images/apple.png";
+sf::Texture Game::pearTexture_;
+std::string Game::pearTexturePath_ = "assets/images/pear.png";
+sf::Texture Game::lemonTexture_;
+std::string Game::lemonTexturePath_ = "assets/images/lemon.png";
+
+int Game::foodIndex_;
+int Game::foodPoints_;
+
+sf::Sound Game::fedSound;
+sf::SoundBuffer Game::fedBuffer;
 
 Button Game::feedButton_;
 bool Game::feedable_ = false;
@@ -26,6 +36,25 @@ sf::Sprite Game::scenery_;
 Button Game::sceneryChooserButton_;
 std::vector<sf::Texture> Game::sceneries_;
 
+void Game::randomizeFood() {
+    foodIndex_ = rand() % 3;
+    switch (foodIndex_) {
+    case 0:
+        food_.setTexture(appleTexture_);
+        foodPoints_ = 50;
+        break;
+    case 1:
+        food_.setTexture(pearTexture_);
+        foodPoints_ = 30;
+        break;
+    case 2:
+        food_.setTexture(lemonTexture_);
+        foodPoints_ = 2;
+    default:
+        break;
+    }
+}
+
 void Game::setGame() {
     saveGameButton_.setPosition(sf::Vector2f(210, 10));
     saveGameButton_.setSize(sf::Vector2f(40, 40));
@@ -33,7 +62,6 @@ void Game::setGame() {
     {
         std::cout << "Error: Font not loaded" << std::endl;
     }
-
 
     if (!petTexture_.loadFromFile(petTexturePath_))
     {
@@ -45,8 +73,19 @@ void Game::setGame() {
     {
         std::cout << "Apple texture not loaded" << std::endl;
     }
-    food_.setTexture(appleTexture_);
-
+    if (!pearTexture_.loadFromFile(pearTexturePath_))
+    {
+        std::cout << "Pear texture not loaded" << std::endl;
+    }
+    if (!lemonTexture_.loadFromFile(lemonTexturePath_))
+    {
+        std::cout << "Lemon texture not loaded" << std::endl;
+    }
+    if (!fedBuffer.loadFromFile("assets/sounds/won.wav")) {
+        std::cout << "Pet fed sound not loaded" << std::endl;
+    }
+    fedSound.setBuffer(fedBuffer);
+    randomizeFood();
     feedButton_.setPosition(sf::Vector2f(95,360));
     feedButton_.setSize(sf::Vector2f(30,30));
 
@@ -98,7 +137,10 @@ void Game::drawGame(sf::RenderWindow &window, int &windowSize, int &margin) {
     if (feedable_ &&
             food_.getPosition().x == pet_.getPosition().x &&
             food_.getPosition().y == pet_.getPosition().y) {
-        gameData_[0] = gameData_[0] + 30;
+        fedSound.play();
+        gameData_[0] = gameData_[0] + foodPoints_;
+        gameData_[2] = time(0); // feeding time
+        randomizeFood();
         feedable_ = false;
     }
 
@@ -180,7 +222,15 @@ sf::Vector2f Game::setCoordinates(sf::Sprite &pet, bool isBounded, sf::RenderWin
 }
 
 void Game::makeFeedable() {
-    feedable_ = true;
+    if (time(0) - gameData_[2] > 60) {
+        feedable_ = true;
+    }
+    else {
+        Button::clickSound.play();
+        std::chrono::duration<int, std::milli> timespan(150);
+        std::this_thread::sleep_for(timespan);
+        Button::clickSound.play();
+    }
 }
 
 void Game::displayTime(float elapsedTime, sf::RenderWindow &window) {
